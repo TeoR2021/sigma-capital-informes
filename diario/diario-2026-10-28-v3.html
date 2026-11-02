@@ -211,6 +211,8 @@ a.vercomp:active { background: var(--paper2); }
 #full { position: fixed; inset: 0; z-index: 100; background: var(--paper); overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
   display: none; user-select: text; -webkit-user-select: text; touch-action: pan-y; }
 #full.open { display: block; }
+html.fullopen #stage, html.fullopen #bar, html.fullopen .side, html.fullopen #hint { visibility: hidden; pointer-events: none; }
+#full, #full * { touch-action: pan-y pinch-zoom; }
 .fv-top { position: sticky; top: 0; z-index: 2; background: var(--bordo); color: #fff; display: flex; align-items: center; justify-content: space-between; gap: 10px;
   padding: 0 10px; height: 50px; box-shadow: 0 2px 10px rgba(0,0,0,.18); padding-top: env(safe-area-inset-top); }
 .fv-back { background: #fff; color: var(--bordo); border: 0; border-radius: 999px; font-family: var(--sans); font-weight: 800; font-size: 14px; padding: 8px 14px; cursor: pointer; white-space: nowrap; }
@@ -479,8 +481,8 @@ function buildPages(d) {
   if (PYME) go.push({ t: "Financiamiento pyme", p: PYP, a: PYSLUG });
   if (d.agenda && d.agenda.length) go.push({ t: "Agenda", p: LAST, a: "agenda" });
   NAV = go;
-  const gotoHTML = `<nav class="goto" aria-label="Índice del diario"><div class="gl">Ir directo a</div><div class="gw">${go.map(g =>
-    `<a class="chip" href="#p${g.p + 1}" data-go="${g.p}" data-anchor="${g.a}"><span class="n" aria-label="hoja ${g.p + 1}">${g.p + 1}</span>${esc(g.t)}</a>`).join("")}</div></nav>`;
+  const gotoHTML = `<nav class="goto" aria-label="Índice del diario"><div class="gl">Ir directo a</div><div class="gw">${go.map((g, gi) =>
+    `<a class="chip" href="#p${g.p + 1}" data-go="${g.p}" data-anchor="${g.a}" aria-label="${esc(g.t)} (hoja ${g.p + 1})"><span class="n" aria-hidden="true">${gi + 1}</span>${esc(g.t)}</a>`).join("")}</div></nav>`;
   // ---- Hoja 1: cabezal + pantallazo general + economía ----
   const pz = d.pantallazo || secs.map(s => plain(headline(s).hl)).filter(Boolean).join(". ") + ".";
   let p1 = `<div class="ears"><img class="logo" src="${LOGO}" alt="Sigma Capital"><div class="ear"><b>${esc(d.titulo || "Resumen de mercados")}</b><br>Edición diaria · ${total} hojas</div></div>
@@ -709,11 +711,12 @@ function openFull(slug) {
     box.classList.add("open"); renderFull(slug);
     box.scrollTop = 0;
   }
-  fullOpen = slug; box.classList.add("open"); box.setAttribute("aria-hidden", "false"); hideHint();
+  fullOpen = slug; box.classList.add("open"); box.setAttribute("aria-hidden", "false"); hideHint(); resetFlip();
+  document.documentElement.classList.add("fullopen");
 }
 function closeFull() {
   if (!fullOpen) return;
-  fullOpen = null; $("full").classList.remove("open"); $("full").setAttribute("aria-hidden", "true");
+  fullOpen = null; $("full").classList.remove("open"); $("full").setAttribute("aria-hidden", "true"); document.documentElement.classList.remove("fullopen");
   if (fsDirty) { fsDirty = false; build(); }
 }
 function goFull(slug, replace) {
@@ -869,7 +872,11 @@ function build() {
   // Un gesto vertical (scroll dentro de una hoja que no entra) no debe interpretarse como "toque" que da vuelta la hoja
   const stop = flip.userStop.bind(flip);
   // ni tampoco un toque sobre un link (abre el informe); un swipe que arranca sobre un link sí da vuelta la hoja
-  flip.userStop = (pos, isSwipe) => { if (vertical || (onLink && moved < 25)) { flip.isUserTouch = false; return; } stop(pos, isSwipe); };
+  // OJO: si un gesto cancelado deja la hoja "doblada" (estado user_fold) la librería sigue llamando preventDefault en TODOS los touchmove
+  // de la ventana y nada más se puede deslizar (ni el informe completo). Por eso al cancelar siempre se vuelve a "read".
+  const move = flip.userMove.bind(flip);
+  flip.userMove = (pos, isTouch) => { if (fullOpen || (isTouch && (vertical || (onLink && moved < 25)))) return; move(pos, isTouch); };
+  flip.userStop = (pos, isSwipe) => { if (fullOpen || vertical || (onLink && moved < 25)) { resetFlip(); return; } stop(pos, isSwipe); };
   flip.on("flip", e => { cur = e.data; update(); hideHint(); if (pendingJump && pendingJump.p === cur) showAnchor(); else pendingJump = null; });
   flip.on("changeState", e => { if (e.data === "user_fold" || e.data === "flipping") hideHint(); });
   $("hint").style.bottom = Math.max(4, Math.round((vh - top - H - 34) / 2)) + "px";
@@ -886,6 +893,22 @@ function update() {
   if (!fullOpen && history.replaceState) history.replaceState(null, "", "#p" + (cur + 1));
 }
 let hintTimer, t0 = null, vertical = false, onLink = false, moved = 0;
+/* Deja la animación quieta en "read" (sin hoja a medio doblar) y olvida cualquier gesto en curso */
+function resetFlip() {
+  if (!flip) return;
+  flip.isUserTouch = false; flip.isUserMove = false;
+  try { const ui = flip.getUI(); if (ui) ui.touchPoint = null; } catch (e) {}
+  if (flip.getState() === "read") return;
+  try {
+    const fc = flip.getFlipController(), r = flip.getRender();
+    r.finishAnimation(); r.setBottomPage(null); r.setFlippingPage(null); r.clearShadow(); fc.setState("read"); fc.reset();
+    flip.turnToPage(flip.getCurrentPageIndex());
+  } catch (e) {}
+}
+/* Con un informe completo abierto los gestos son del informe (scroll nativo): no le llega ninguno a la animación de las hojas */
+const shieldFull = e => { if (fullOpen) e.stopPropagation(); };
+["touchstart", "touchmove", "touchend", "touchcancel"].forEach(t => window.addEventListener(t, shieldFull, { capture: true, passive: true }));
+window.addEventListener("touchcancel", () => { if (!fullOpen) resetFlip(); }, { passive: true });
 window.addEventListener("touchstart", e => { const t = e.touches[0]; t0 = { x: t.clientX, y: t.clientY }; vertical = false; moved = 0;
   onLink = !!(e.target.closest && e.target.closest("a[data-full], a[data-go]")); }, { capture: true, passive: true });
 window.addEventListener("touchmove", e => { if (!t0) return; const t = e.touches[0]; const dx = Math.abs(t.clientX - t0.x), dy = Math.abs(t.clientY - t0.y); moved = Math.max(moved, dx);
