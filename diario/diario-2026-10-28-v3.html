@@ -35,9 +35,9 @@
   --head: "SSerif", "Georgia", "Times New Roman", serif;           /* titulares y cabezal: serif moderna (Source Serif) */
   --sans: "Inter", "Helvetica Neue", Arial, sans-serif;
   --black: "SSerif", "Georgia", "Times New Roman", serif;
-  --fz: 1;   /* escala de letra de los informes completos (botón "Letra grande": 1.5) */
+  --fz: 1;   /* escala de letra de los informes completos (botón "Letra grande": 1.4) */
 }
-html.big { --fz: 1.5; }
+html.big { --fz: 1.4; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; overflow: hidden; background: #1f1f21; overscroll-behavior: none; }
 body { font-family: var(--serif); color: var(--ink); -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent;
@@ -252,7 +252,9 @@ a.vercomp:active { background: var(--paper2); }
 .fsbtn .ic { font-family: var(--head); font-weight: 900; font-size: 20px; line-height: 1; letter-spacing: -.02em; }
 .fsbtn[aria-pressed="true"] { background: transparent; color: #fff; }
 .fsbtn:focus-visible { outline: 3px solid #f3c969; outline-offset: 2px; }
-@media (max-width: 440px) { #bar { gap: 9px; } #bar .dots { display: none; } #bar .ind { min-width: 86px; } .fv-top .r { display: none; } }
+@media (max-width: 440px) { #bar { gap: 6px; } #bar .dots { display: none; } #bar .ind { min-width: 0; font-size: 12px; line-height: 1.15; } #bar .ind b { display: block; font-size: 15px; letter-spacing: 0; }
+  .fv-top .r { display: none; } #bar .fsbtn { font-size: 13.5px; padding: 0 10px 0 8px; } }
+@media (max-width: 374px) { #bar { gap: 5px; } #bar .fsbtn { font-size: 13px; padding: 0 8px 0 7px; gap: 4px; } #bar .idxbtn { padding: 0 8px; } .nav { width: 32px; height: 32px; } }
 .fv-top .fsbtn { min-height: 36px; box-shadow: none; }
 #fstoast { position: fixed; left: 50%; top: 18px; transform: translateX(-50%); z-index: 300; background: rgba(26,26,26,.92); color: #fff; font-family: var(--sans); font-weight: 700;
   font-size: 16px; padding: 10px 16px; border-radius: 12px; pointer-events: none; opacity: 0; transition: opacity .3s; white-space: nowrap; }
@@ -276,14 +278,54 @@ html.big .pyrow .v { text-align: left; }
 .cue { font-size: 13px; }
 
 /* Tablas de los informes: scroll horizontal si no entran */
-.tscroll { overflow-x: auto; -webkit-overflow-scrolling: touch; touch-action: pan-x pan-y; margin-top: 8px; }
+.tscroll { margin-top: 8px; max-width: 100%; }
 .tscroll .fv-table { margin-top: 0; }
 .tshint { display: none; font-family: var(--sans); font-weight: 700; font-size: 14px; color: var(--bordo2); margin-top: 8px; }
 html.big .fv { padding: 14px 14px 40px; }
-html.big .fv-table.wide { min-width: 600px; }
-html.big .tshint.wide { display: block; }
 html.big .fv .agbig .row { grid-template-columns: 1fr; gap: 2px; }
 html.big .fv-top .fv-back { font-size: 15px; }
+
+
+/* ---------- Índice: "Ir a" (hoja 1) y botón Índice de la barra ---------- */
+.idxbtn { display: inline-flex; align-items: center; gap: 5px; min-height: 38px; padding: 0 11px; border-radius: 999px; border: 1px solid rgba(236,236,236,.55); background: rgba(0,0,0,.2);
+  color: #fff; font-family: var(--sans); font-weight: 800; font-size: 13.5px; letter-spacing: 0; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+.idxbtn .ic { font-size: 16px; line-height: 1; }
+.idxbtn.here { opacity: .6; }
+.goto { margin-top: .45em; }
+.goto .gl { font-family: var(--sans); font-weight: 800; font-size: .56em; letter-spacing: .12em; text-transform: uppercase; color: var(--bordo2); margin-bottom: .3em; }
+.goto .gw { display: flex; flex-wrap: wrap; gap: .32em .32em; }
+.goto a.chip { display: inline-flex; align-items: center; gap: .35em; min-height: 2.05em; padding: .12em .62em .12em .55em; border: 1.5px solid var(--bordo); border-radius: 999px; background: #fff;
+  color: var(--bordo); text-decoration: none; font-family: var(--sans); font-weight: 800; font-size: .66em; line-height: 1.1; cursor: pointer; }
+.goto a.chip .n { display: inline-flex; align-items: center; justify-content: center; min-width: 1.45em; height: 1.45em; border-radius: 999px; background: var(--bordo); color: #fff; font-size: .82em; font-weight: 800; }
+.goto a.chip:active, .goto a.chip.on { background: var(--bordo); color: #fff; }
+.goto a.chip:active .n { background: #fff; color: var(--bordo); }
+@keyframes flashsec { 0%, 55% { box-shadow: 0 0 0 3px rgba(93,1,11,.55); } 100% { box-shadow: 0 0 0 3px rgba(93,1,11,0); } }
+.flash { animation: flashsec 1.6s ease-out 1; border-radius: 2px; }
+/* Hoja de financiamiento pyme */
+.pyexp { margin-top: .6em; }
+.pyexp p { font-size: .78em; line-height: 1.35; margin: .3em 0 0; }
+.pyexp p b { font-family: var(--sans); font-size: .9em; }
+.pycurve { margin-top: .7em; border-top: 2px solid var(--ink); }
+.pycurve .ttl { font-family: var(--sans); font-weight: 800; font-size: .58em; letter-spacing: .12em; text-transform: uppercase; color: var(--bordo2); margin: .4em 0 .2em; }
+.pycurve .r { display: grid; grid-template-columns: 5.6em 1fr auto; align-items: center; gap: .5em; padding: .16em 0; font-family: var(--sans); font-size: .7em; }
+.pycurve .r .bar { height: .7em; background: var(--bordo); border-radius: 1px; }
+.pycurve .r .v { font-weight: 800; font-variant-numeric: tabular-nums; }
+/* Tablas: si no entran a lo ancho se achican un poco y, si igual no entran, pasan a "fichas" (una por fila) */
+.fv-table.cards, .fv-table.cards tbody, .fv-table.cards tr, .fv-table.cards td { display: block; width: auto; }
+.fv-table.cards { border: 0; background: transparent; }
+.fv-table.cards thead { display: none; }
+.fv-table.cards tr { background: #fff; border: 1px solid var(--rule); border-left: 3px solid var(--bordo); margin-top: 8px; padding: 4px 10px 6px; }
+.fv-table.cards td { border: 0 !important; padding: 3px 0 !important; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; white-space: normal !important; text-align: right; }
+.fv-table.cards td::before { content: attr(data-l); font-family: var(--sans); font-weight: 600; font-size: .9em; color: var(--ink2); text-align: left; flex: 0 1 auto; min-width: 0; }
+.fv-table.cards td .cv { flex: 0 0 auto; max-width: 62%; text-align: right; }
+.fv-table.cards td.num .cv { white-space: nowrap; }
+.fv-table.cards td:first-child { display: block; text-align: left; font-family: var(--sans); font-weight: 800; color: var(--bordo2); border-bottom: 1px solid var(--rule) !important; padding-bottom: 4px !important; margin-bottom: 2px; }
+.fv-table.cards td:first-child::before { content: none; }
+.fv-table.cards td.num { white-space: normal !important; }
+.fv-table td { overflow-wrap: anywhere; }
+#full a.vercomp { white-space: normal; overflow: visible; line-height: 1.3; }
+.fv-table .ops { display: block; font-weight: 600; font-size: .8em; color: var(--ink2); }
+.fv-table.cards .ops { display: block; }
 
 /* ---------- Recuadro "Financiamiento pyme" ---------- */
 .pyblk { margin-top: .75em; }
@@ -301,7 +343,7 @@ html.big .fv-top .fv-back { font-size: 15px; }
 <div id="stage"></div>
 <button class="nav side" id="sprev" aria-label="Página anterior">‹</button>
 <button class="nav side" id="snext" aria-label="Página siguiente">›</button>
-<div id="bar"><button class="nav" id="prev" aria-label="Página anterior">‹</button><div><div class="ind" id="ind"></div></div><div class="dots" id="dots"></div><button class="nav" id="next" aria-label="Página siguiente">›</button><button class="fsbtn" data-fs type="button" aria-pressed="false"></button></div>
+<div id="bar"><button class="nav" id="prev" aria-label="Página anterior">‹</button><div><div class="ind" id="ind"></div></div><div class="dots" id="dots"></div><button class="nav" id="next" aria-label="Página siguiente">›</button><button class="idxbtn" id="idxbtn" type="button" aria-label="Ir al índice (hoja 1)"><span class="ic">☰</span>Índice</button><button class="fsbtn" data-fs type="button" aria-pressed="false"></button></div>
 <div id="fstoast" role="status" aria-live="polite"></div>
 <div id="hint"><span id="hintt">deslizá para pasar de hoja</span><span class="hand">👈</span></div>
 <div id="og"></div>
@@ -409,6 +451,7 @@ function layoutV2(d) {
   return [[0].filter(i => i < n), [...Array(n).keys()].slice(1)];
 }
 let FULL = {};   // slug -> { s, page }
+let NAV = [];    // índice: [{ t, p, a }]
 function kstrip(kpis) {   // una sola fila compacta de números de la sección
   return `<div class="kgrid" style="grid-template-columns:repeat(${kpis.length},1fr)">` + kpis.map((k, i) =>
     `<div class="kpi ${k.dir || ""} ${i === 0 ? "first" : ""}"><div class="l">${esc(k.label)}</div><div class="v">${arrow(k)}${esc(k.valor)}</div></div>`).join("") + `</div>`;
@@ -416,7 +459,7 @@ function kstrip(kpis) {   // una sola fila compacta de números de la sección
 function secBlock(s, kpis) {
   const slug = secSlug(s);
   const items = (s.resumen && s.resumen.length ? s.resumen : (s.items && s.items.length ? s.items : (s.slide || {}).bullets)) || [];
-  return `<div class="secblk"><a class="sechead" href="#completo-${slug}" data-full="${slug}"><span class="t">${esc(secName(s))}</span><span class="m">Ver completo ›</span></a>
+  return `<div class="secblk" data-sec="${slug}"><a class="sechead" href="#completo-${slug}" data-full="${slug}"><span class="t">${esc(secName(s))}</span><span class="m">Ver completo ›</span></a>
     ${kpis && (s.slide || {}).kpis && s.slide.kpis.length ? `<div class="kstrip opt">${kstrip(s.slide.kpis)}</div>` : ""}
     <ul class="bul">${items.map(li).join("")}</ul>
     <a class="vercomp" href="#completo-${slug}" data-full="${slug}">Ver informe completo de ${esc(secShort(s))} →</a></div>`;
@@ -424,15 +467,26 @@ function secBlock(s, kpis) {
 function buildPages(d) {
   const secs = d.secciones || [];
   const lay = layoutV2(d);
-  const total = 3;
+  const PYP = PYME ? 2 : -1;              // hoja de Financiamiento pyme (si hay datos)
+  const total = PYME ? 4 : 3, LAST = total - 1;
   const pages = [];
   FULL = {};
   lay.forEach((ids, p) => ids.forEach(i => { FULL[secSlug(secs[i])] = { s: secs[i], page: p }; }));
+  if (PYME) FULL[PYSLUG] = { s: pymeSection(PYME, d), page: PYP };
+  // índice "Ir a": cada botón da vuelta el diario directo a la hoja de esa sección
+  const go = [];
+  lay.forEach((ids, p) => ids.forEach(i => go.push({ t: secShort(secs[i]), p, a: secSlug(secs[i]) })));
+  if (PYME) go.push({ t: "Financiamiento pyme", p: PYP, a: PYSLUG });
+  if (d.agenda && d.agenda.length) go.push({ t: "Agenda", p: LAST, a: "agenda" });
+  NAV = go;
+  const gotoHTML = `<nav class="goto" aria-label="Índice del diario"><div class="gl">Ir directo a</div><div class="gw">${go.map(g =>
+    `<a class="chip" href="#p${g.p + 1}" data-go="${g.p}" data-anchor="${g.a}"><span class="n" aria-label="hoja ${g.p + 1}">${g.p + 1}</span>${esc(g.t)}</a>`).join("")}</div></nav>`;
   // ---- Hoja 1: cabezal + pantallazo general + economía ----
   const pz = d.pantallazo || secs.map(s => plain(headline(s).hl)).filter(Boolean).join(". ") + ".";
   let p1 = `<div class="ears"><img class="logo" src="${LOGO}" alt="Sigma Capital"><div class="ear"><b>${esc(d.titulo || "Resumen de mercados")}</b><br>Edición diaria · ${total} hojas</div></div>
     <div class="mast fit-w">${MAST}</div>
     <div class="dateline"><span>${esc(d.fecha)}</span><span class="c">Informe diario</span></div>
+    ${gotoHTML}
     <div class="pz"><div class="flag pz-flag"><span class="t">Pantallazo general</span><span class="n">Lectura: 2-3 min</span></div>`;
   if (d.indicadores && d.indicadores.length) p1 += `<div class="ticker">${kgrid(d.indicadores)}</div>`;
   p1 += `<div class="pz-txt">${fmt(pz)}</div></div>`;
@@ -443,19 +497,20 @@ function buildPages(d) {
   let p2 = runhead(d, 2, total);
   (lay[1] || []).forEach(i => p2 += secBlock(secs[i], true));
   pages.push(p2 + folio(d, 2, total));
-  // ---- Hoja 3: lo que viene + aviso legal ----
+  // ---- Hoja 3 (si hay datos): financiamiento pyme ----
+  if (PYME) pages.push(runhead(d, PYP + 1, total) + pymePage(PYME, d) + folio(d, PYP + 1, total));
+  // ---- Última hoja: lo que viene + aviso legal ----
   const NOREC = "Material informativo, no constituye recomendación de inversión.";
   const foot = d.footer || "";
   const hasNoRec = /no constituye recomendaci[oó]n/i.test(foot);
   const footRest = foot.replace(/(Material informativo,?\s*)?no constituye recomendaci[oó]n de inversi[oó]n\.?/i, "").trim();
-  let back = runhead(d, 3, total) + `<div class="flag"><span class="t">Lo que viene</span><span class="n">Agenda</span></div>`;
+  let back = runhead(d, LAST + 1, total) + `<div class="flag" data-sec="agenda"><span class="t">Lo que viene</span><span class="n">Agenda</span></div>`;
   if (d.agenda && d.agenda.length)
     back += `<div class="agbig">${d.agenda.map(a => `<div class="row"><div class="w">${esc(a.cuando)}</div><div class="q">${fmt(a.que)}</div></div>`).join("")}</div>`;
-  if (PYME) { FULL[PYSLUG] = { s: pymeSection(PYME, d), page: 2 }; back += pymeBox(PYME, d); }
   back += `<div class="idx2"><div class="ttl">Informes completos</div>${Object.keys(FULL).map(k => FULL[k].s).map(s =>
     `<a href="#completo-${secSlug(s)}" data-full="${secSlug(s)}"><span>${esc(secName(s))}</span><span class="p">Leer →</span></a>`).join("")}</div>`;
   back += `<div class="grow"></div><div class="colophon opt"><img src="${LOGO}" alt="Sigma Capital"></div>
-    <div class="disc"><div class="ttl">Aviso legal</div><p class="main">${hasNoRec ? "Este informe es material informativo y no constituye recomendación de inversión." : esc(NOREC)}</p>${footRest ? `<p>${esc(footRest)}</p>` : ""}</div>` + folio(d, 3, total);
+    <div class="disc"><div class="ttl">Aviso legal</div><p class="main">${hasNoRec ? "Este informe es material informativo y no constituye recomendación de inversión." : esc(NOREC)}</p>${footRest ? `<p>${esc(footRest)}</p>` : ""}</div>` + folio(d, LAST + 1, total);
   pages.push(back);
   return pages;
 }
@@ -498,6 +553,20 @@ function pymeBox(P, d) {
     ${rows.map(r => `<div class="pyrow"><div class="l">${esc(r.l)}<small>${esc(r.m)}</small></div><div class="v ${r.v === SD ? "na" : ""}">${esc(r.v)}</div></div>`).join("")}
     <div class="pynote">${bfe && bfe < P.rueda ? `El BCRA publica con 1-2 días hábiles de demora: sus tasas son del ${ddmm(bfe)}.` : ""}${other}</div></div></div>`;
 }
+function pymePage(P, d) {
+  const av = (((P.mav || {}).segmentos || {})["Cheque avalado"] || []).filter(x => isNum(x.tasa));
+  const mx = Math.max(...av.map(x => x.tasa), 1), mn = Math.min(...av.map(x => x.tasa), 0) * 0.9;
+  let h = `<div data-sec="${PYSLUG}">` + pymeBox(P, d).replace('<div class="pyblk">', '<div class="pyblk" style="margin-top:.2em">') + `</div>`;
+  if (av.length >= 2) h += `<div class="pycurve opt"><div class="ttl">Cheque avalado: tasa por plazo · ${ddmm((P.mav || {}).fecha || P.rueda)} · MAV</div>${av.map(x =>
+    `<div class="r"><span>${esc(x.tramo)} días</span><span class="bar" style="width:${(20 + 80 * (x.tasa - mn) / ((mx - mn) || 1)).toFixed(0)}%"></span><span class="v">${pc(x.tasa)}</span></div>`).join("")}</div>`;
+  h += `<div class="pyexp opt">
+    <p><b>TAMAR y BADLAR:</b> lo que pagan los bancos privados por plazos fijos grandes; son la referencia de los préstamos y obligaciones negociables a tasa variable.</p>
+    <p><b>Caución:</b> préstamo de muy corto plazo con garantía en BYMA; marca el costo del dinero a pocos días.</p>
+    <p><b>Money market:</b> lo que rinde tener la liquidez de la empresa en un fondo de rescate inmediato.</p>
+    <p><b>Cheques:</b> costo de descontar cheques en el MAV. El avalado tiene garantía de una SGR o un banco; el no garantizado depende sólo de quien lo libra.</p></div>`;
+  h += `<a class="vercomp" href="#completo-${PYSLUG}" data-full="${PYSLUG}">Ver informe completo de Financiamiento pyme →</a>`;
+  return h;
+}
 function pymeSection(P, d) {
   const b = P.bcra || {}, f = P.fci_mm || {}, c = P.caucion || {}, mv = P.mav || {}, seg = mv.segmentos || {};
   const rows = pymeRows(P);
@@ -520,12 +589,12 @@ function pymeSection(P, d) {
   const avc = (seg["Cheque avalado"] || []).filter(x => isNum(x.tasa));
   comp.push({ subtitulo: "Cheques de pago diferido (MAV)",
     parrafos: [`Tasa promedio ponderada por monto de las operaciones en pesos concertadas el ${dow(P.rueda)} ${ddmm(P.rueda, true)}, por plazo hasta el pago. **Avalado:** lo garantiza una SGR o un banco. **No garantizado:** cheque directo, con el riesgo de la empresa que lo libra.`, mv.metodo || ""].filter(Boolean),
-    tabla: chq.length ? { columnas: ["Plazo (días)", ...chq.map(x => x.replace("Cheque ", ""))], filas: tramos.map(t => [t, ...chq.map(sg => cellM(sg, t))]).filter(r => r.slice(1).some(x => x !== "–")) } : { columnas: ["Dato"], filas: [[SD]] },
+    tabla: chq.length ? { columnas: ["Días", ...chq.map(x => cap(x.replace("Cheque ", "")))], filas: tramos.map(t => [t, ...chq.map(sg => cellM(sg, t))]).filter(r => r.slice(1).some(x => x !== "–")) } : { columnas: ["Dato"], filas: [[SD]] },
     grafico: avc.length >= 2 ? { tipo: "barras", titulo: "Cheque avalado: tasa por plazo (TNA %)", unidad: "TNA", series: avc.map(x => ({ label: `${x.tramo} días`, valor: x.tasa, texto: pc(x.tasa) })) } : null });
   const otr = ["Pagaré avalado", "Pagaré no garantizado", "FCE no garantizado"].filter(has);
   if (otr.length) comp.push({ subtitulo: "Pagarés y facturas de crédito electrónicas (MAV)",
     parrafos: ["Con pocas operaciones en un tramo, el promedio puede quedar muy lejos del resto: conviene mirar la cantidad de operaciones."],
-    tabla: { columnas: ["Plazo (días)", ...otr], filas: tramos.map(t => [t, ...otr.map(sg => cellM(sg, t))]).filter(r => r.slice(1).some(x => x !== "–")) } });
+    tabla: { columnas: ["Días", ...otr.map(x => x.replace("garantizado", "gar.").replace("FCE", "Factura (FCE)"))], filas: tramos.map(t => [t, ...otr.map(sg => cellM(sg, t))]).filter(r => r.slice(1).some(x => x !== "–")) } });
   comp.push({ subtitulo: "FCI money market en pesos",
     parrafos: [`Rendimiento anualizado (TNA) del último día hábil, ${ddmm(f.fecha_base)} → ${ddmm(f.fecha, true)}, a partir del valor de la cuotaparte. ${isNum(f.tna_1d) ? `Promedio ponderado por patrimonio: **${pc(f.tna_1d)}**; mediana: ${pc(f.mediana_1d)} (${f.n_fondos} fondos).` : "sin dato"}`],
     tabla: (f.top || []).length ? { columnas: ["Fondo", "TNA", "Patrimonio ($ millones)"], filas: f.top.map(x => [x.fondo, pc(x.tna), nf(x.patrimonio_mm)]) } : null });
@@ -549,20 +618,24 @@ function kpiVar(k) {   // variación porcentual explícita (con signo) de un ind
 function barChart(g) {
   const S = (g.series || []).filter(x => typeof x.valor === "number" && isFinite(x.valor));
   if (!S.length) return "";
-  const z = BIG ? 1.45 : 1;   // con "Letra grande" el gráfico crece con el texto
+  const z = BIG ? 1.35 : 1;   // con "Letra grande" el gráfico crece con el texto
   const W = 360, rowH = Math.round(46 * z), top = 4;
   const mn = Math.min(0, ...S.map(x => x.valor)), mx = Math.max(0, ...S.map(x => x.valor));
   const lp = mn < 0 ? 52 * z : 1, rp = mx > 0 ? 58 * z : 2;
   const sc = (W - lp - rp) / ((mx - mn) || 1), x0 = lp + (0 - mn) * sc;
   const pct = (g.unidad || "") === "%";
-  const H = top + S.length * rowH + 4;
+  const fsL = 13 * z, maxCh = Math.floor(W / (fsL * 0.56));   // etiquetas largas: en 2 renglones para que no se salgan del gráfico
+  const wrapL = t => { t = String(t); if (t.length <= maxCh) return [t]; let cut = t.lastIndexOf(" ", maxCh); if (cut < 8) cut = maxCh; return [t.slice(0, cut), t.slice(cut).trim()]; };
+  const L = S.map(x => wrapL(x.label)), extra = L.map(l => (l.length - 1) * Math.round(fsL * 1.2));
+  const off = extra.map((_, i) => extra.slice(0, i).reduce((a, b) => a + b, 0));
+  const H = top + S.length * rowH + extra.reduce((a, b) => a + b, 0) + 4;
   let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(g.titulo || "Gráfico")}" font-family="Inter, Arial, sans-serif">`;
   S.forEach((x, i) => {
-    const y = top + i * rowH, by = y + Math.round(20 * z), bh = Math.round(16 * z);
+    const y = top + i * rowH + off[i] + extra[i], y0 = top + i * rowH + off[i], by = y + Math.round(20 * z), bh = Math.round(16 * z);
     const xa = x.valor >= 0 ? x0 : x0 + x.valor * sc, w = Math.max(1.5, Math.abs(x.valor) * sc);
     const col = pct ? (x.valor >= 0 ? "#17692f" : "#b3261e") : "#5d010b";
     const txt = x.texto || String(x.valor).replace(".", ",");
-    s += `<text x="0" y="${y + 13 * z}" font-size="${13 * z}" font-weight="600" fill="#333">${esc(x.label)}</text>`;
+    s += `<text x="0" y="${y0 + 13 * z}" font-size="${fsL}" font-weight="600" fill="#333">${L[i].map((l, k) => `<tspan x="0" dy="${k ? Math.round(fsL * 1.2) : 0}">${esc(l)}</tspan>`).join("")}</text>`;
     s += `<line x1="${x0.toFixed(1)}" y1="${by - 3}" x2="${x0.toFixed(1)}" y2="${by + bh + 3}" stroke="#1a1a1a" stroke-width="1"/>`;
     s += `<rect x="${xa.toFixed(1)}" y="${by}" width="${w.toFixed(1)}" height="${bh}" rx="2" fill="${col}"/>`;
     s += x.valor >= 0 ? `<text x="${(xa + w + 6).toFixed(1)}" y="${by + 12.5 * z}" font-size="${13.5 * z}" font-weight="800" fill="${col}">${esc(txt)}</text>`
@@ -573,14 +646,15 @@ function barChart(g) {
 }
 function tableHTML(t) {
   if (!t || !t.filas || !t.filas.length) return "";
-  const cell = c => { const s = String(c ?? ""); const cls = /^\s*(__|\^\^)?[+\-−~]?\$?\d/.test(s) ? "num" : ""; return `<td class="${cls}">${fmt(s)}</td>`; };
+  const cols = t.columnas || [];
+  const cell = (c, j) => { const s = String(c ?? ""); const cls = /^\s*(__|\^\^)?[+\-−~]?\$?\d/.test(s) ? "num" : ""; return `<td class="${cls}" data-l="${esc(cols[j] || "")}"><span class="cv">${fmt(s).replace(/ · (\d+ op\.)$/, '<span class="ops">$1</span>')}</span></td>`; };
   const wide = Math.max((t.columnas || []).length, ...t.filas.map(r => r.length)) >= 3 ? " wide" : "";
-  return (t.titulo ? `<h3>${esc(t.titulo)}</h3>` : "") + `<div class="tshint${wide}">↔ Deslizá la tabla hacia el costado</div><div class="tscroll"><table class="fv-table${wide}">${t.columnas ? `<thead><tr>${t.columnas.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead>` : ""}<tbody>${t.filas.map(r => `<tr>${r.map(cell).join("")}</tr>`).join("")}</tbody></table></div>`;
+  return (t.titulo ? `<h3>${esc(t.titulo)}</h3>` : "") + `<div class="tscroll"><table class="fv-table${wide}">${t.columnas ? `<thead><tr>${t.columnas.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead>` : ""}<tbody>${t.filas.map(r => `<tr>${r.map((c, j) => cell(c, j)).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
 function kpiTable(kpis) {
   const det = kpis.some(k => k.detalle);
-  return `${det ? '<div class="tshint wide">↔ Deslizá la tabla hacia el costado</div>' : ""}<div class="tscroll"><table class="fv-table${det ? " wide" : ""}"><thead><tr><th>Indicador</th><th>Valor</th>${det ? "<th>Detalle</th>" : ""}</tr></thead><tbody>${kpis.map(k =>
-    `<tr><td>${esc(k.label)}</td><td class="num ${k.dir || ""}">${k.dir === "up" ? "▲ " : k.dir === "down" ? "▼ " : ""}${esc(k.valor)}</td>${det ? `<td>${esc(k.detalle || "")}</td>` : ""}</tr>`).join("")}</tbody></table></div>`;
+  return `<div class="tscroll"><table class="fv-table${det ? " wide" : ""}"><thead><tr><th>Indicador</th><th>Valor</th>${det ? "<th>Detalle</th>" : ""}</tr></thead><tbody>${kpis.map(k =>
+    `<tr><td data-l="Indicador">${esc(k.label)}</td><td data-l="Valor" class="num ${k.dir || ""}">${k.dir === "up" ? "▲ " : k.dir === "down" ? "▼ " : ""}${esc(k.valor)}</td>${det ? `<td data-l="Detalle">${esc(k.detalle || "")}</td>` : ""}</tr>`).join("")}</tbody></table></div>`;
 }
 function fullHTML(d, slug) {
   const { s, page } = FULL[slug], sl = s.slide || {};
@@ -613,6 +687,18 @@ function fullHTML(d, slug) {
   if (d.footer) h += `<div class="disc"><div class="ttl">Aviso legal</div><p>${esc(d.footer)}</p></div>`;
   return h;
 }
+/* Cada tabla tiene que entrar a lo ancho del teléfono: 1º se achica la letra (hasta 85%), si no alcanza pasa a fichas apiladas */
+function fitTables(root) {
+  root.querySelectorAll("table.fv-table").forEach(t => {
+    t.classList.remove("cards"); t.style.fontSize = "";
+    const wrap = t.parentNode, fits = () => t.scrollWidth <= wrap.clientWidth + 0.5 && t.getBoundingClientRect().right <= wrap.getBoundingClientRect().right + 0.5;
+    if (fits()) return;
+    const base = parseFloat(getComputedStyle(t).fontSize);
+    for (let f = 0.95; f >= 0.85 - 1e-9 && !fits(); f -= 0.05) t.style.fontSize = (base * f).toFixed(2) + "px";
+    if (!fits()) { t.style.fontSize = ""; t.classList.add("cards"); }
+  });
+}
+function renderFull(slug) { $("fvbody").innerHTML = fullHTML(DATA, slug); fitTables($("fvbody")); }
 let fullOpen = null, fullFrom = 0;
 function openFull(slug) {
   if (!FULL[slug]) return;
@@ -620,7 +706,7 @@ function openFull(slug) {
   if (fullOpen !== slug) {
     fullFrom = FULL[slug].page;
     $("fvr").textContent = secName(FULL[slug].s);
-    $("fvbody").innerHTML = fullHTML(DATA, slug);
+    box.classList.add("open"); renderFull(slug);
     box.scrollTop = 0;
   }
   fullOpen = slug; box.classList.add("open"); box.setAttribute("aria-hidden", "false"); hideHint();
@@ -728,9 +814,9 @@ function fitPage(pg, base, W) {
   [...inner.querySelectorAll(".opt")].reverse().forEach(e => { if (over()) { e.style.display = "none"; setK(k); } });   // 1º se quitan elementos opcionales (franjas de números)
   while (over() && k > 0.9) { k -= 0.02; setK(k); }
   while (over() && k > 0.84) { k -= 0.02; setK(k); }                                     // piso de legibilidad (~12px el cuerpo)
-  if (BIG) {   // letra al 150%: se vuelve a mostrar todo y el texto crece 1,5x sobre el tamaño que entraba; la hoja scrollea si hace falta
+  if (BIG) {   // letra al 140%: se vuelve a mostrar todo y el texto crece 1,4x sobre el tamaño que entraba; la hoja scrollea si hace falta
     inner.querySelectorAll(".opt").forEach(e => { e.style.display = ""; });
-    k = k * 1.5; setK(k);
+    k = k * 1.4; setK(k);
   }
   if (over()) { inner.classList.add("scroll"); pg.querySelector(".paper").insertAdjacentHTML("beforeend", '<div class="cue">seguí leyendo ↓</div>'); }  // último recurso: scroll interno
   pg.dataset.k = k.toFixed(2); pg.dataset.scroll = inner.classList.contains("scroll") ? "1" : "0";
@@ -779,12 +865,12 @@ function build() {
     drawShadow: true, maxShadowOpacity: 0.55, flippingTime: 850, mobileScrollSupport: true,
     swipeDistance: 25, clickEventForward: false, showPageCorners: true, disableFlipByClick: false, startPage: Math.min(cur, els.length - 1),
   });
-  flip.loadFromHTML(els);
+  flip.loadFromHTML(els); PAGE_EL = els;
   // Un gesto vertical (scroll dentro de una hoja que no entra) no debe interpretarse como "toque" que da vuelta la hoja
   const stop = flip.userStop.bind(flip);
   // ni tampoco un toque sobre un link (abre el informe); un swipe que arranca sobre un link sí da vuelta la hoja
   flip.userStop = (pos, isSwipe) => { if (vertical || (onLink && moved < 25)) { flip.isUserTouch = false; return; } stop(pos, isSwipe); };
-  flip.on("flip", e => { cur = e.data; update(); hideHint(); });
+  flip.on("flip", e => { cur = e.data; update(); hideHint(); if (pendingJump && pendingJump.p === cur) showAnchor(); else pendingJump = null; });
   flip.on("changeState", e => { if (e.data === "user_fold" || e.data === "flipping") hideHint(); });
   $("hint").style.bottom = Math.max(4, Math.round((vh - top - H - 34) / 2)) + "px";
   $("bar").style.height = (vh - top - H) + "px";
@@ -792,7 +878,8 @@ function build() {
 }
 function update() {
   const n = PAGES_HTML.length;
-  $("ind").textContent = `Hoja ${cur + 1} de ${n}`;
+  $("ind").innerHTML = `Hoja <b>${cur + 1} de ${n}</b>`;
+  $("idxbtn").classList.toggle("here", cur === 0);
   $("dots").innerHTML = PAGES_HTML.map((_, i) => `<i class="${i === cur ? "on" : ""}"></i>`).join("");
   $("prev").disabled = $("sprev").disabled = cur === 0;
   $("next").disabled = $("snext").disabled = cur === n - 1;
@@ -800,7 +887,7 @@ function update() {
 }
 let hintTimer, t0 = null, vertical = false, onLink = false, moved = 0;
 window.addEventListener("touchstart", e => { const t = e.touches[0]; t0 = { x: t.clientX, y: t.clientY }; vertical = false; moved = 0;
-  onLink = !!(e.target.closest && e.target.closest("a[data-full]")); }, { capture: true, passive: true });
+  onLink = !!(e.target.closest && e.target.closest("a[data-full], a[data-go]")); }, { capture: true, passive: true });
 window.addEventListener("touchmove", e => { if (!t0) return; const t = e.touches[0]; const dx = Math.abs(t.clientX - t0.x), dy = Math.abs(t.clientY - t0.y); moved = Math.max(moved, dx);
   if (dy > 12 && dy > dx * 1.2) vertical = true;
   // scroll vertical dentro de una hoja larga (letra grande): no se le pasa el gesto a la animación para que no "doble" la hoja
@@ -809,30 +896,50 @@ document.addEventListener("scroll", e => { const el = e.target; if (!el.classLis
   const c = el.parentNode.querySelector(".cue"); if (c) c.classList.toggle("off", el.scrollTop + el.clientHeight >= el.scrollHeight - 8); }, true);
 function hideHint() { $("hint").classList.add("off"); clearTimeout(hintTimer); }
 const next = () => flip && flip.flipNext("bottom"), prev = () => flip && flip.flipPrev("bottom");
+/* Saltar directo a una hoja (índice de la hoja 1 o botón Índice). Queda en el historial: el "atrás" del teléfono vuelve a donde estaba. */
+let PAGE_EL = [];
+function jumpTo(p, anchor) {
+  if (!flip) return;
+  p = Math.max(0, Math.min(PAGES_HTML.length - 1, p));
+  pendingJump = { p, anchor }; showAnchor();
+  if (p !== cur && history.pushState) history.pushState({ page: p }, "", "#p" + (p + 1));
+  if (p === cur) { update(); return; }
+  hideHint();
+  if (Math.abs(p - cur) === 1) flip.flip(p, "bottom"); else { flip.turnToPage(p); cur = p; update(); showAnchor(); }
+}
+let pendingJump = null;
+function showAnchor() {   // lleva la sección elegida al principio de la hoja (si la hoja scrollea) y la resalta un instante
+  const j = pendingJump; if (!j) return;
+  const pg = PAGE_EL[j.p], inner = pg && pg.querySelector(".inner"); if (!inner || !inner.getClientRects().length) return;
+  const target = j.anchor ? inner.querySelector(`[data-sec="${j.anchor}"]`) : null;
+  inner.scrollTop = target && inner.classList.contains("scroll") ? Math.max(0, target.getBoundingClientRect().top - inner.getBoundingClientRect().top + inner.scrollTop - 6) : 0;
+  if (target) { target.classList.remove("flash"); void target.offsetWidth; target.classList.add("flash"); }
+  if (j.p === cur) pendingJump = null;
+}
 
-/* ---------- Letra grande (100% <-> 150%), se recuerda en este teléfono ---------- */
+/* ---------- Letra grande (100% <-> 140%), se recuerda en este teléfono ---------- */
 const FS_KEY = "sigma-diario-letra";
 let BIG = false;
-try { BIG = localStorage.getItem(FS_KEY) === "150"; } catch (e) {}
-{ const q = /[?&]letra=(\w+)/.exec(location.search); if (q) BIG = q[1] === "150" || q[1] === "grande"; }
+try { BIG = /^1[45]0$/.test(localStorage.getItem(FS_KEY) || ""); } catch (e) {}
+{ const q = /[?&]letra=(\w+)/.exec(location.search); if (q) BIG = q[1] === "140" || q[1] === "150" || q[1] === "grande"; }
 function paintFs() {
   document.documentElement.classList.toggle("big", BIG);
   document.querySelectorAll("[data-fs]").forEach(b => {
     b.setAttribute("aria-pressed", BIG ? "true" : "false");
-    b.setAttribute("aria-label", BIG ? "Volver a la letra normal" : "Agrandar la letra un 50%");
+    b.setAttribute("aria-label", BIG ? "Volver a la letra normal" : "Agrandar la letra un 40%");
     b.innerHTML = BIG ? '<span class="ic">A−</span>Letra normal' : '<span class="ic">A+</span>Letra grande';
   });
 }
 let toastT;
 function toggleFs() {
   BIG = !BIG;
-  try { localStorage.setItem(FS_KEY, BIG ? "150" : "100"); } catch (e) {}
+  try { localStorage.setItem(FS_KEY, BIG ? "140" : "100"); } catch (e) {}
   paintFs();
-  const t = $("fstoast"); t.textContent = BIG ? "Letra grande (150%)" : "Letra normal (100%)"; t.classList.add("on");
+  const t = $("fstoast"); t.textContent = BIG ? "Letra grande (140%)" : "Letra normal (100%)"; t.classList.add("on");
   clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("on"), 1600);
   if (fullOpen) {   // informe abierto: se rearma manteniendo la posición de lectura
     const box = $("full"), r = box.scrollTop / Math.max(1, box.scrollHeight - box.clientHeight);
-    $("fvbody").innerHTML = fullHTML(DATA, fullOpen);
+    renderFull(fullOpen);
     box.scrollTop = r * Math.max(0, box.scrollHeight - box.clientHeight);
     fsDirty = true;
   } else build();
@@ -853,7 +960,7 @@ function buildOG(d) {
       <div class="ticker" style="align-self:start;margin-top:.6em"><div class="ttl">Los números del día</div>${kgridList(d.indicadores || [])}</div>
     </div><div class="grow"></div>
     <div style="background:var(--bordo);color:#fff;display:flex;justify-content:space-between;align-items:center;padding:.4em .8em;margin:0 -1.7em -1em;font-family:var(--sans);font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:.72em">
-      <span>Tocá y pasá las hojas como en un diario</span><span style="font-family:var(--sans);letter-spacing:.02em;text-transform:none;font-weight:400">3 hojas + informes completos · Sigma Capital</span></div>
+      <span>Tocá y pasá las hojas como en un diario</span><span style="font-family:var(--sans);letter-spacing:.02em;text-transform:none;font-weight:400">${PYME ? 4 : 3} hojas + informes completos · Sigma Capital</span></div>
     </div></div>`;
   const m = og.querySelector(".fit-w"); m.style.overflow = "hidden"; fitText(m, 74);
 }
@@ -877,17 +984,20 @@ function start() {
   window.addEventListener("hashchange", route);
   window.addEventListener("popstate", route);
   // tocar un link/botón dentro de la hoja no debe dar vuelta la página: se corta el evento antes de que llegue a la animación
-  const guard = e => { if (e.target.closest && e.target.closest("a[data-full], #full")) e.stopPropagation(); };
+  const guard = e => { if (e.target.closest && e.target.closest("a[data-full], a[data-go], #full")) e.stopPropagation(); };
   window.addEventListener("mousedown", guard, true);
   // (en pantallas táctiles el toque sobre un link se filtra en flip.userStop, así un swipe que empieza sobre un link igual pasa la hoja)
   document.addEventListener("click", e => {
     const a = e.target.closest && e.target.closest("a[data-full]");
     if (a) { e.preventDefault(); goFull(a.dataset.full, !!a.dataset.replace); return; }
+    const g = e.target.closest && e.target.closest("a[data-go]");
+    if (g) { e.preventDefault(); jumpTo(+g.dataset.go, g.dataset.anchor); return; }
     if (e.target.closest && e.target.closest("[data-back]")) { e.preventDefault(); backToBook(); }
   });
   if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) { $("hintt").textContent = "tocá la hoja o usá las flechas ← →"; $("hint").querySelector(".hand").textContent = "👆"; }
   if (cur > 0) hideHint(); else hintTimer = setTimeout(hideHint, 6000);
   $("next").onclick = $("snext").onclick = next;
+  $("idxbtn").onclick = () => jumpTo(0, null);
   $("prev").onclick = $("sprev").onclick = prev;
   document.addEventListener("keydown", e => {
     if (fullOpen) { if (e.key === "Escape") backToBook(); return; }
@@ -896,7 +1006,7 @@ function start() {
   });
   let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => {
     // en el celular la barra del navegador cambia el alto todo el tiempo: sólo se rearma si cambia el ancho (rotación)
-    if (Math.abs(window.innerWidth - lastW) > 2 || window.innerWidth >= 700) build();
+    if (Math.abs(window.innerWidth - lastW) > 2 || window.innerWidth >= 700) { build(); if (fullOpen) fitTables($("fvbody")); }
   }, 250); });
   document.body.dataset.ready = "1";
 }
