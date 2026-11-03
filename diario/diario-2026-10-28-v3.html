@@ -341,13 +341,141 @@ html.big .fv-top .fv-back { font-size: 15px; }
 .pyrow .v { font-family: var(--sans); font-weight: 800; font-size: .88em; white-space: nowrap; font-variant-numeric: tabular-nums; text-align: right; color: var(--ink); }
 .pyrow .v.na { color: var(--ink2); font-weight: 600; font-size: .74em; }
 .pynote { font-family: var(--sans); font-size: .54em; color: var(--ink2); padding: .4em .65em .45em; border-top: 1px solid var(--rule); line-height: 1.4; }
+
+/* ---------- Botón de formato: "Versión moderna" <-> "Versión diario" ---------- */
+#bar .bnav, #bar .btog { display: flex; align-items: center; justify-content: center; gap: inherit; }
+.fmtbtn { display: inline-flex; align-items: center; gap: 6px; min-height: 38px; padding: 0 13px 0 10px; border-radius: 999px; border: 2px solid #fff; background: rgba(255,255,255,.12); color: #fff;
+  font-family: var(--sans); font-weight: 800; font-size: 14.5px; letter-spacing: 0; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
+.fmtbtn svg { width: 17px; height: 17px; flex-shrink: 0; }
+.fmtbtn:focus-visible { outline: 3px solid #f3c969; outline-offset: 2px; }
+@media (max-width: 440px) {
+  #bar { flex-direction: column; gap: 6px; justify-content: center; }
+  #bar .btog { order: -1; gap: 8px; } #bar .bnav { gap: 6px; }
+  #bar .fmtbtn { font-size: 13.5px; padding: 0 10px 0 8px; min-height: 36px; } #bar .fsbtn { min-height: 36px; }
+}
+@media (max-width: 374px) { #bar .fmtbtn { font-size: 13px; padding: 0 8px 0 7px; gap: 4px; } }
+
+/* ---------- Versión moderna: scroll vertical, tarjetas, sin hojas ---------- */
+#modern { position: fixed; inset: 0; z-index: 40; display: none; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; overflow-anchor: none;
+  background: #f6f6f8; color: #17171c; font-family: var(--sans); user-select: text; -webkit-user-select: text; }
+html.modern #modern { display: block; }
+html.modern #stage, html.modern #bar, html.modern .side, html.modern #hint { display: none !important; }
+html.modern body { background: #f6f6f8; }
+.m-head { position: sticky; top: 0; z-index: 5; background: rgba(255,255,255,.97); border-bottom: 1px solid #e8e8ec; padding-top: env(safe-area-inset-top); }
+.m-bar { display: flex; align-items: center; gap: 8px; height: 56px; padding: 0 12px; max-width: 760px; margin: 0 auto; }
+.m-bar .logo { height: 28px; width: auto; flex-shrink: 0; display: block; }
+.m-bar .sp { flex: 1 1 auto; min-width: 0; }
+.m-bar .fmtbtn, .m-bar .fsbtn { min-height: 36px; font-size: 13.5px; padding: 0 11px 0 9px; box-shadow: none; gap: 5px; }
+.m-bar .fmtbtn { background: #fff; color: var(--bordo); border: 1.5px solid var(--bordo); }
+.m-bar .fsbtn { background: var(--bordo); color: #fff; border: 1.5px solid var(--bordo); }
+.m-bar .fsbtn[aria-pressed="true"] { background: #fff; color: var(--bordo); }
+.m-bar .fsbtn .ic, html.modern .fv-top .fsbtn .ic { font-family: var(--sans); font-size: 16px; font-weight: 800; }
+@media (max-width: 400px) { .m-bar { gap: 6px; padding: 0 8px; } .m-bar .logo { height: 24px; } .m-bar .fmtbtn, .m-bar .fsbtn { font-size: 12.5px; padding: 0 8px 0 7px; gap: 4px; } }
+@media (max-width: 350px) { .m-bar .logo { display: none; } }
+.m-chips { display: flex; gap: 8px; overflow-x: auto; overflow-y: hidden; padding: 2px 12px 10px; scrollbar-width: none; -webkit-overflow-scrolling: touch; max-width: 760px; margin: 0 auto; }
+.m-chips::-webkit-scrollbar { display: none; }
+.m-chips a { flex: 0 0 auto; display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; border-radius: 999px; background: #f0f0f3; color: #3a3a42; font-weight: 600;
+  font-size: calc(13.5px * min(var(--fz), 1.2)); text-decoration: none; white-space: nowrap; transition: background .2s, color .2s; }
+.m-chips a.on { background: var(--bordo); color: #fff; }
+.m-main { max-width: 680px; margin: 0 auto; padding: 18px 14px 36px; }
+.m-hero .date { font-size: calc(13px * var(--fz)); color: #6b6b75; font-weight: 600; }
+.m-hero h1 { font-size: calc(26px * var(--fz)); font-weight: 800; letter-spacing: -.025em; line-height: 1.15; margin-top: 4px; color: #111; }
+.m-hero .tag { display: inline-block; margin-top: 10px; font-size: calc(12px * var(--fz)); font-weight: 700; color: var(--bordo); background: #f6ecee; border-radius: 999px; padding: 4px 10px; }
+.m-lead { font-size: calc(16px * var(--fz)); line-height: 1.55; color: #2b2b33; margin-top: 12px; }
+.m-kpis { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 16px; }
+@media (min-width: 560px) { .m-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); } html.big .m-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.m-kpis .m-kpi:last-child:nth-child(odd) { grid-column: 1 / -1; }
+@media (min-width: 560px) { html:not(.big) .m-kpis .m-kpi:last-child:nth-child(odd) { grid-column: auto; } }
+.m-kpi { background: #fff; border: 1px solid #ebebef; border-radius: 14px; padding: 12px 12px 11px; min-width: 0; }
+.m-kpi .l { font-size: calc(12px * var(--fz)); color: #6b6b75; font-weight: 600; line-height: 1.25; }
+.m-kpi .v { font-size: calc(21px * var(--fz)); font-weight: 800; letter-spacing: -.02em; white-space: nowrap; margin-top: 4px; font-variant-numeric: tabular-nums; color: #111; overflow: visible; }
+.m-kpi .v .arr { font-size: .6em; margin-right: .15em; vertical-align: .12em; }
+.m-kpi.up .v .arr, .m-kpi.up .d { color: var(--up); } .m-kpi.down .v .arr, .m-kpi.down .d { color: var(--down); }
+.m-kpi .d { font-size: calc(12.5px * var(--fz)); font-weight: 700; margin-top: 2px; color: #55555e; line-height: 1.3; }
+.m-kpi .dx { font-size: calc(12px * var(--fz)); color: #55555e; margin-top: 4px; line-height: 1.3; }
+.m-kpi .dx b { color: #17171c; }
+.m-card { background: #fff; border: 1px solid #ebebef; border-radius: 18px; padding: 18px 16px 16px; margin-top: 16px; box-shadow: 0 1px 2px rgba(20,20,30,.04); }
+.m-card .eb { font-size: calc(12px * var(--fz)); font-weight: 700; color: var(--bordo); letter-spacing: .04em; text-transform: uppercase; }
+.m-card h2 { font-size: calc(20px * var(--fz)); font-weight: 800; letter-spacing: -.02em; line-height: 1.25; margin-top: 4px; color: #111; }
+.m-card .meta { font-size: calc(12.5px * var(--fz)); color: #6b6b75; margin-top: 4px; font-weight: 600; }
+.m-mini { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+@media (min-width: 560px) { html:not(.big) .m-mini { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+.m-mini .m-kpi { background: #f7f7f9; border: 0; border-radius: 12px; padding: 10px; }
+.m-mini .m-kpi .v { font-size: calc(17px * var(--fz)); }
+.m-mini .m-kpi .l, .m-mini .m-kpi .d { font-size: calc(11.5px * var(--fz)); }
+.m-list { list-style: none; margin-top: 12px; }
+.m-list li { font-size: calc(15px * var(--fz)); line-height: 1.5; color: #2b2b33; padding: 9px 0; border-top: 1px solid #f0f0f3; }
+.m-list li:first-child { border-top: 0; padding-top: 2px; }
+.m-list li b.lead { font-weight: 700; color: #111; }
+.m-btn { display: flex; align-items: center; justify-content: center; gap: 6px; min-height: 46px; margin-top: 14px; border-radius: 12px; background: var(--bordo); color: #fff;
+  font-weight: 700; font-size: calc(15px * var(--fz)); text-decoration: none; text-align: center; padding: 10px 14px; line-height: 1.25; }
+.m-btn:active { background: var(--bordo2); }
+.m-rows { margin-top: 10px; }
+.m-rows .r { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 10px 0; border-top: 1px solid #f0f0f3; }
+.m-rows .r:first-child { border-top: 0; }
+.m-rows .l { font-size: calc(14.5px * var(--fz)); line-height: 1.3; color: #17171c; min-width: 0; }
+.m-rows .l small { display: block; color: #6b6b75; font-size: calc(12px * var(--fz)); font-weight: 500; margin-top: 2px; }
+.m-rows .v { font-weight: 800; white-space: nowrap; font-size: calc(15px * var(--fz)); font-variant-numeric: tabular-nums; }
+.m-rows .v.na { color: #6b6b75; font-weight: 600; }
+html.big .m-rows .r { flex-direction: column; gap: 2px; }
+.m-note { font-size: calc(12.5px * var(--fz)); color: #6b6b75; margin-top: 8px; line-height: 1.4; }
+.m-card .fv-chart { border: 0; background: #f7f7f9; border-radius: 12px; padding: 12px 12px 8px; }
+.m-card .fv-chart .ct { font-size: calc(12px * var(--fz)); letter-spacing: 0; text-transform: none; color: #17171c; }
+.m-exp { margin-top: 12px; border-top: 1px solid #f0f0f3; padding-top: 10px; }
+.m-exp summary { font-size: calc(14px * var(--fz)); font-weight: 700; color: var(--bordo); cursor: pointer; min-height: 32px; display: flex; align-items: center; }
+.m-exp p { font-size: calc(14px * var(--fz)); line-height: 1.5; color: #2b2b33; margin-top: 8px; }
+.m-ag .r { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: baseline; padding: 10px 0; border-top: 1px solid #f0f0f3; }
+.m-ag .r:first-child { border-top: 0; }
+.m-ag .w { font-size: calc(12.5px * var(--fz)); font-weight: 700; color: var(--bordo); background: #f6ecee; border-radius: 8px; padding: 3px 8px; white-space: nowrap; }
+.m-ag .q { font-size: calc(15px * var(--fz)); line-height: 1.45; color: #2b2b33; }
+html.big .m-ag .r { grid-template-columns: minmax(0, 1fr); gap: 4px; } html.big .m-ag .w { justify-self: start; white-space: normal; }
+.m-links a { display: flex; justify-content: space-between; align-items: center; gap: 10px; min-height: 48px; padding: 8px 0; border-top: 1px solid #f0f0f3; color: #17171c;
+  text-decoration: none; font-weight: 600; font-size: calc(15px * var(--fz)); }
+.m-links a:first-child { border-top: 0; }
+.m-links a span:last-child { color: var(--bordo); font-weight: 700; white-space: nowrap; }
+.m-disc { margin-top: 18px; padding: 14px 16px; border-radius: 14px; background: #efeff2; }
+.m-disc .ttl { font-size: calc(11.5px * var(--fz)); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #55555e; }
+.m-disc p { font-size: calc(13px * var(--fz)); line-height: 1.5; color: #44444c; margin-top: 6px; }
+.m-foot { text-align: center; font-size: calc(12px * var(--fz)); color: #8a8a93; margin-top: 18px; }
+.m-card.flash, .m-hero.flash { animation: mflash 1.4s ease-out 1; }
+@keyframes mflash { 0%, 50% { box-shadow: 0 0 0 3px rgba(93,1,11,.35); } 100% { box-shadow: 0 0 0 3px rgba(93,1,11,0); } }
+.m-sec { scroll-margin-top: 120px; }
+
+/* Informe completo abierto desde la versión moderna: mismo contenido, estética limpia */
+html.modern #full { background: #fff; }
+html.modern .fv-top { background: rgba(255,255,255,.97); color: #17171c; border-bottom: 1px solid #e8e8ec; box-shadow: none; }
+html.modern .fv-top .fv-back { background: var(--bordo); color: #fff; }
+html.modern .fv-top .fsbtn { background: #fff; color: var(--bordo); border: 1.5px solid var(--bordo); }
+html.modern .fv-top .fsbtn[aria-pressed="true"] { background: var(--bordo); color: #fff; }
+html.modern .fv { font-family: var(--sans); }
+html.modern .fv .mh { display: none; }
+html.modern .fv .kick { color: var(--bordo); font-family: var(--sans); letter-spacing: .04em; margin-top: 4px; }
+html.modern .fv h1 { font-family: var(--sans); font-weight: 800; letter-spacing: -.025em; font-size: calc(27px * var(--fz)); }
+html.modern .fv h2 { font-family: var(--sans); font-weight: 800; letter-spacing: -.015em; border-left: 0; padding-left: 0; font-size: calc(19px * var(--fz)); }
+html.modern .fv h3 { letter-spacing: .04em; color: var(--bordo); }
+html.modern .fv p { color: #2b2b33; }
+html.modern .fv-sec { border-top: 1px solid #f0f0f3; }
+html.modern .fv-table { border: 1px solid #ebebef; border-radius: 12px; border-collapse: separate; border-spacing: 0; }
+html.modern .fv-table th { background: #f7f7f9; color: #55555e; letter-spacing: .04em; }
+html.modern .fv-table th:first-child { border-top-left-radius: 11px; } html.modern .fv-table th:last-child { border-top-right-radius: 11px; }
+html.modern .fv-table td { border-top: 1px solid #f0f0f3; }
+html.modern .fv-table.cards { border: 0; }
+html.modern .fv-table.cards tr { border: 1px solid #ebebef; border-radius: 12px; background: #fff; }
+html.modern .fv-table.cards td:first-child { color: var(--bordo); border-bottom: 1px solid #f0f0f3 !important; }
+html.modern .fv-chart { border: 0; background: #f7f7f9; border-radius: 12px; }
+html.modern .fv-chart .ct { letter-spacing: 0; text-transform: none; color: #17171c; }
+html.modern .fv .fv-end .fv-back { border-radius: 12px; }
+html.modern #full a.vercomp { font-family: var(--sans); border-radius: 12px; }
+html.modern .fv .disc { border: 0; background: #f4f4f6; border-radius: 12px; padding: 12px 14px; }
+html.modern .fv .agbig .row { border-color: #f0f0f3; }
 </style>
 </head>
 <body>
 <div id="stage"></div>
 <button class="nav side" id="sprev" aria-label="Página anterior">‹</button>
 <button class="nav side" id="snext" aria-label="Página siguiente">›</button>
-<div id="bar"><button class="nav" id="prev" aria-label="Página anterior">‹</button><div><div class="ind" id="ind"></div></div><div class="dots" id="dots"></div><button class="nav" id="next" aria-label="Página siguiente">›</button><button class="idxbtn" id="idxbtn" type="button" aria-label="Ir al índice (hoja 1)"><span class="ic">☰</span>Índice</button><button class="fsbtn" data-fs type="button" aria-pressed="false"></button></div>
+<div id="bar"><div class="bnav"><button class="nav" id="prev" aria-label="Página anterior">‹</button><div><div class="ind" id="ind"></div></div><div class="dots" id="dots"></div><button class="nav" id="next" aria-label="Página siguiente">›</button><button class="idxbtn" id="idxbtn" type="button" aria-label="Ir al índice (hoja 1)"><span class="ic">☰</span>Índice</button></div><div class="btog"><button class="fmtbtn" data-fmt type="button"></button><button class="fsbtn" data-fs type="button" aria-pressed="false"></button></div></div>
+<div id="modern" aria-label="Resumen diario (versión moderna)"></div>
 <div id="fstoast" role="status" aria-live="polite"></div>
 <div id="hint"><span id="hintt">deslizá para pasar de hoja</span><span class="hand">👈</span></div>
 <div id="og"></div>
@@ -683,7 +811,7 @@ function fullHTML(d, slug) {
   if (sl.agenda && sl.agenda.length)
     h += `<h3>Agenda de la sección</h3><div class="agbig">${sl.agenda.map(a => `<div class="row"><div class="w">${esc(a.cuando)}</div><div class="q">${fmt(a.que)}</div></div>`).join("")}</div>`;
   const others = Object.keys(FULL).filter(k => k !== slug);
-  h += `<div class="fv-end"><button class="fv-back" data-back>← Volver al diario</button>
+  h += `<div class="fv-end"><button class="fv-back" data-back>${backLabel()}</button>
     <div class="others">${others.map(k => `<a class="vercomp" href="#completo-${k}" data-full="${k}" data-replace="1">Ver informe completo de ${esc(secShort(FULL[k].s))} →</a>`).join("")}</div></div>`;
   if (d.footer) h += `<div class="disc"><div class="ttl">Aviso legal</div><p>${esc(d.footer)}</p></div>`;
   return h;
@@ -706,6 +834,8 @@ function openFull(slug) {
   const box = $("full");
   if (fullOpen !== slug) {
     fullFrom = FULL[slug].page;
+    if (MODERN && !fullOpen) mSaved = mPos();   // dónde estaba leyendo en la versión moderna
+    document.querySelectorAll("#full .fv-top [data-back]").forEach(b => b.textContent = backLabel());
     $("fvr").textContent = secName(FULL[slug].s);
     box.classList.add("open"); renderFull(slug);
     box.scrollTop = 0;
@@ -716,7 +846,7 @@ function openFull(slug) {
 function closeFull() {
   if (!fullOpen) return;
   fullOpen = null; $("full").classList.remove("open"); $("full").setAttribute("aria-hidden", "true"); document.documentElement.classList.remove("fullopen");
-  if (fsDirty) { fsDirty = false; build(); }
+  if (fsDirty) { fsDirty = false; if (MODERN && mSaved) { renderModern(); mRestore(mSaved); } else rebuildView(); }
 }
 function goFull(slug, replace) {
   const st = { full: slug, from: (history.state && history.state.from != null) ? history.state.from : cur };
@@ -727,6 +857,7 @@ function goFull(slug, replace) {
 function backToBook() {
   if (history.state && history.state.full) { history.back(); return; }   // vino desde el diario: el "atrás" del navegador vuelve a la hoja exacta
   const p = fullFrom; closeFull();
+  if (MODERN) { if (history.replaceState) history.replaceState(null, "", "#" + (mActive || "resumen")); return; }   // la versión moderna quedó abajo, en la misma posición
   if (flip && p !== cur) { flip.turnToPage(p); cur = p; }
   update();
 }
@@ -734,7 +865,10 @@ function route() {
   const m = /^#completo-(.+)$/.exec(location.hash);
   if (m && FULL[m[1]]) { openFull(m[1]); return; }
   const wasOpen = fullOpen; closeFull();
+  if (MODERN) { if (!wasOpen) { const a = anchorFromHash(location.hash); if (a && a !== mActive) mScrollTo(a, true); } return; }   // (al cerrar un informe no se mueve: queda donde estaba)
   const p = /^#p(\d+)$/.exec(location.hash);
+  const sa = !p && !wasOpen ? NAV.find(g => "#" + g.a === location.hash) : null;
+  if (flip && sa) { jumpTo(sa.p, sa.a); return; }
   if (flip) {
     const i = p ? Math.max(0, Math.min(PAGES_HTML.length - 1, +p[1] - 1)) : (wasOpen ? fullFrom : cur);
     if (i !== cur) { flip.turnToPage(i); cur = i; }
@@ -829,7 +963,7 @@ let flip = null, PAGES_HTML = [], cur = 0, lastW = 0;
 const $ = id => document.getElementById(id);
 function dims() {
   const vw = window.innerWidth, vh = window.innerHeight;
-  const barH = 50;
+  const barH = vw <= 440 ? 90 : 50;   // en el teléfono la barra tiene 2 filas: [Versión moderna][Letra grande] y ‹ Hoja › Índice
   const desktop = vw >= 700;
   let H = vh - barH - (desktop ? 28 : 8);
   let W = desktop ? Math.min(Math.round(H * 0.6), 560) : vw - 12;
@@ -837,6 +971,7 @@ function dims() {
   return { W: Math.round(W), H: Math.round(H), top: desktop ? 16 : 6, vh };
 }
 function build() {
+  if (MODERN) return;
   const { W, H, top, vh } = dims();
   lastW = window.innerWidth;
   if (flip) { cur = flip.getCurrentPageIndex(); try { flip.destroy(); } catch (e) {} flip = null; }
@@ -874,8 +1009,8 @@ function build() {
   // OJO: si un gesto cancelado deja la hoja "doblada" (estado user_fold) la librería sigue llamando preventDefault en TODOS los touchmove
   // de la ventana y nada más se puede deslizar (ni el informe completo). Por eso al cancelar siempre se vuelve a "read".
   const move = flip.userMove.bind(flip);
-  flip.userMove = (pos, isTouch) => { if (fullOpen || (isTouch && (vertical || (onLink && moved < 25)))) return; move(pos, isTouch); };
-  flip.userStop = (pos, isSwipe) => { if (fullOpen || vertical || (onLink && moved < 25)) { resetFlip(); return; } stop(pos, isSwipe); };
+  flip.userMove = (pos, isTouch) => { if (fullOpen || MODERN || (isTouch && (vertical || (onLink && moved < 25)))) return; move(pos, isTouch); };
+  flip.userStop = (pos, isSwipe) => { if (fullOpen || MODERN || vertical || (onLink && moved < 25)) { resetFlip(); return; } stop(pos, isSwipe); };
   flip.on("flip", e => { cur = e.data; update(); hideHint(); if (pendingJump && pendingJump.p === cur) showAnchor(); else pendingJump = null; });
   flip.on("changeState", e => { if (e.data === "user_fold" || e.data === "flipping") hideHint(); });
   $("hint").style.bottom = Math.max(4, Math.round((vh - top - H - 34) / 2)) + "px";
@@ -889,7 +1024,7 @@ function update() {
   $("dots").innerHTML = PAGES_HTML.map((_, i) => `<i class="${i === cur ? "on" : ""}"></i>`).join("");
   $("prev").disabled = $("sprev").disabled = cur === 0;
   $("next").disabled = $("snext").disabled = cur === n - 1;
-  if (!fullOpen && history.replaceState) history.replaceState(null, "", "#p" + (cur + 1));
+  if (!fullOpen && !MODERN && history.replaceState) history.replaceState(null, "", "#p" + (cur + 1));
 }
 let hintTimer, t0 = null, vertical = false, onLink = false, moved = 0;
 /* Deja la animación quieta en "read" (sin hoja a medio doblar) y olvida cualquier gesto en curso */
@@ -905,9 +1040,9 @@ function resetFlip() {
   } catch (e) {}
 }
 /* Con un informe completo abierto los gestos son del informe (scroll nativo): no le llega ninguno a la animación de las hojas */
-const shieldFull = e => { if (fullOpen) e.stopPropagation(); };
+const shieldFull = e => { if (fullOpen || MODERN) e.stopPropagation(); };
 ["touchstart", "touchmove", "touchend", "touchcancel"].forEach(t => window.addEventListener(t, shieldFull, { capture: true, passive: true }));
-window.addEventListener("touchcancel", () => { if (!fullOpen) resetFlip(); }, { passive: true });
+window.addEventListener("touchcancel", () => { if (!fullOpen && !MODERN) resetFlip(); }, { passive: true });
 window.addEventListener("touchstart", e => { const t = e.touches[0]; t0 = { x: t.clientX, y: t.clientY }; vertical = false; moved = 0;
   onLink = !!(e.target.closest && e.target.closest("a[data-full], a[data-go]")); }, { capture: true, passive: true });
 window.addEventListener("touchmove", e => { if (!t0) return; const t = e.touches[0]; const dx = Math.abs(t.clientX - t0.x), dy = Math.abs(t.clientY - t0.y); moved = Math.max(moved, dx);
@@ -954,6 +1089,7 @@ function paintFs() {
 }
 let toastT;
 function toggleFs() {
+  const mpos = MODERN && !fullOpen ? mPos() : null;   // posición de lectura medida ANTES de cambiar la letra
   BIG = !BIG;
   try { localStorage.setItem(FS_KEY, BIG ? "140" : "100"); } catch (e) {}
   paintFs();
@@ -964,7 +1100,8 @@ function toggleFs() {
     renderFull(fullOpen);
     box.scrollTop = r * Math.max(0, box.scrollHeight - box.clientHeight);
     fsDirty = true;
-  } else build();
+  } else if (mpos) { renderModern(); mRestore(mpos); }
+  else rebuildView();
 }
 let fsDirty = false;
 
@@ -991,17 +1128,185 @@ function kgridList(kpis) {
     <div class="l" style="font-size:.62em">${esc(k.label)}</div><div class="v" style="font-size:1.15em">${arrow(k)}${esc(k.valor)}${k.detalle ? ` <span class="d" style="font-size:.5em">${esc(k.detalle)}</span>` : ""}</div></div>`).join("") + `</div>`;
 }
 
+/* ---------- Formato: "diario" (hojas, por defecto) <-> "moderno" (scroll vertical). Se recuerda en este teléfono; ?formato=moderno|diario ---------- */
+const FMT_KEY = "sigma-diario-formato";
+let MODERN = false;
+try { MODERN = localStorage.getItem(FMT_KEY) === "moderno"; } catch (e) {}
+{ const q = /[?&]formato=(\w+)/.exec(location.search); if (q) MODERN = q[1] === "moderno"; }
+const IC_MOD = '<svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="2.5" width="14" height="6" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="11.5" width="14" height="6" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>';
+const IC_DIA = '<svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="3" width="15" height="14" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5.5 7h9M5.5 10h4M5.5 13h4M11.5 10h3M11.5 13h3" stroke="currentColor" stroke-width="1.6"/></svg>';
+function backLabel() { return MODERN ? "← Volver al resumen" : "← Volver al diario"; }
+function paintFmt() {
+  document.documentElement.classList.toggle("modern", MODERN);
+  document.querySelectorAll("[data-fmt]").forEach(b => {
+    b.innerHTML = MODERN ? IC_DIA + "Versión diario" : IC_MOD + "Versión moderna";
+    b.setAttribute("aria-label", MODERN ? "Ver como diario (pasar hojas)" : "Ver en versión moderna (deslizar hacia abajo)");
+  });
+}
+function anchorFromHash(h) {
+  const p = /^#p(\d+)$/.exec(h || "");
+  if (p) { const i = +p[1] - 1; if (i <= 0) return "resumen"; const g = NAV.find(x => x.p === i); return g ? g.a : "resumen"; }
+  const c = /^#completo-(.+)$/.exec(h || ""); if (c && FULL[c[1]]) return c[1];
+  const a = (h || "").slice(1); if (a === "resumen" || NAV.some(g => g.a === a)) return a;
+  return null;
+}
+function setFormat(f) {
+  const toModern = f === "moderno";
+  if (toModern === MODERN) return;
+  if (fullOpen) closeFull();
+  try { localStorage.setItem(FMT_KEY, toModern ? "moderno" : "diario"); } catch (e) {}
+  // si el link traía ?formato=..., se saca para que al recargar valga lo que eligió el lector
+  if (/[?&]formato=/.test(location.search) && history.replaceState) {
+    const q = location.search.replace(/([?&])formato=\w+&?/, "$1").replace(/[?&]$/, "");
+    history.replaceState(history.state, "", location.pathname + q + location.hash);
+  }
+  if (toModern) {
+    // la animación de hojas se destruye: no queda ningún listener táctil de la librería (ni preventDefault)
+    let a = "resumen";
+    if (flip) { cur = flip.getCurrentPageIndex(); resetFlip(); try { flip.destroy(); } catch (e) {} flip = null; }
+    $("stage").innerHTML = ""; PAGE_EL = [];
+    if (cur > 0) { const g = NAV.find(x => x.p === cur); if (g) a = g.a; }
+    MODERN = true; paintFmt(); hideHint();
+    renderModern(); mScrollTo(a, false);
+  } else {
+    const a = mActive || "resumen", g = NAV.find(x => x.a === a);
+    cur = a === "resumen" || !g ? 0 : g.p;
+    MODERN = false; paintFmt();
+    $("modern").innerHTML = "";
+    build();
+    if (g && a !== "resumen") { pendingJump = { p: cur, anchor: a }; showAnchor(); }
+  }
+  const t = $("fstoast"); t.textContent = MODERN ? "Versión moderna" : "Versión diario"; t.classList.add("on");
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove("on"), 1400);
+}
+function rebuildView() {
+  if (!MODERN) { build(); return; }
+  const pos = mPos(); renderModern(); mRestore(pos);
+}
+function mKpi(k) {
+  const dx = (k.detalles || []).map(x => `<div class="dx">${fmt(x)}</div>`).join("");
+  return `<div class="m-kpi ${k.dir || ""}"><div class="l">${esc(k.label)}</div><div class="v">${arrow(k)}${esc(k.valor)}</div>${k.detalle ? `<div class="d">${esc(k.detalle)}</div>` : ""}${dx}</div>`;
+}
+function mBtn(slug, name) { return `<a class="m-btn" href="#completo-${slug}" data-full="${slug}">Ver informe completo<span aria-hidden="true">→</span></a>`; }
+function mSec(s) {
+  const slug = secSlug(s), kp = (s.slide || {}).kpis || [];
+  const items = (s.resumen && s.resumen.length ? s.resumen : (s.items && s.items.length ? s.items : (s.slide || {}).bullets)) || [];
+  return `<section class="m-card m-sec" data-m="${slug}"><h2>${esc(secName(s))}</h2>
+    ${kp.length ? `<div class="m-mini">${kp.map(mKpi).join("")}</div>` : ""}
+    <ul class="m-list">${items.map(li).join("")}</ul>${mBtn(slug)}</section>`;
+}
+function mPyme(P, d) {
+  const rows = pymeRows(P), bfe = pyB(P, "tamar").fecha;
+  const other = d && d.fecha_archivo && d.fecha_archivo !== P.rueda ? ` El resto de esta edición es del ${ddmm(d.fecha_archivo)}.` : "";
+  const av = (((P.mav || {}).segmentos || {})["Cheque avalado"] || []).filter(x => isNum(x.tasa));
+  let h = `<section class="m-card m-sec" data-m="${PYSLUG}"><h2>Financiamiento pyme</h2><div class="meta">Tasas al cierre del ${dow(P.rueda)} ${ddmm(P.rueda)} · TNA</div>
+    <div class="m-rows">${rows.map(r => `<div class="r"><div class="l">${esc(r.l)}<small>${esc(r.m)}</small></div><div class="v ${r.v === SD ? "na" : ""}">${esc(r.v)}</div></div>`).join("")}</div>`;
+  const note = (bfe && bfe < P.rueda ? `El BCRA publica con 1-2 días hábiles de demora: sus tasas son del ${ddmm(bfe)}.` : "") + other;
+  if (note) h += `<div class="m-note">${esc(note)}</div>`;
+  if (av.length >= 2) h += barChart({ titulo: `Cheque avalado: tasa por plazo · ${ddmm((P.mav || {}).fecha || P.rueda)} · MAV`, unidad: "TNA",
+    series: av.map(x => ({ label: `${x.tramo} días`, valor: x.tasa, texto: pc(x.tasa) })) }).replace("Gráfico elaborado con las cifras del informe.", "Fuente: MAV. Gráfico elaborado con las cifras del informe.");
+  h += `<details class="m-exp"><summary>¿Qué mide cada tasa?</summary>
+    <p><b>TAMAR y BADLAR:</b> lo que pagan los bancos privados por plazos fijos grandes; son la referencia de los préstamos y obligaciones negociables a tasa variable.</p>
+    <p><b>Caución:</b> préstamo de muy corto plazo con garantía en BYMA; marca el costo del dinero a pocos días.</p>
+    <p><b>Money market:</b> lo que rinde tener la liquidez de la empresa en un fondo de rescate inmediato.</p>
+    <p><b>Cheques:</b> costo de descontar cheques en el MAV. El avalado tiene garantía de una SGR o un banco; el no garantizado depende sólo de quien lo libra.</p></details>`;
+  return h + mBtn(PYSLUG) + `</section>`;
+}
+function modernHTML(d) {
+  const secs = d.secciones || [], by = {};
+  secs.forEach(s => by[secSlug(s)] = s);
+  const pz = d.pantallazo || secs.map(s => plain(headline(s).hl)).filter(Boolean).join(". ") + ".";
+  const chips = [{ t: "Resumen", a: "resumen" }].concat(NAV);
+  let h = `<header class="m-head"><div class="m-bar"><img class="logo" src="${LOGO}" alt="Sigma Capital"><span class="sp"></span>
+    <button class="fmtbtn" data-fmt type="button"></button><button class="fsbtn" data-fs type="button" aria-pressed="false"></button></div>
+    <nav class="m-chips" aria-label="Secciones">${chips.map(g => `<a href="#${g.a}" data-mgo="${g.a}">${esc(g.t)}</a>`).join("")}</nav></header><main class="m-main">`;
+  h += `<section class="m-hero m-sec" data-m="resumen"><div class="date">${esc(d.fecha)}</div><h1>${esc(d.titulo || "Resumen de mercados")}</h1>
+    <div class="tag">Pantallazo general · lectura 2-3 min</div><p class="m-lead">${fmt(pz)}</p>
+    ${d.indicadores && d.indicadores.length ? `<div class="m-kpis">${d.indicadores.map(mKpi).join("")}</div>` : ""}</section>`;
+  NAV.forEach(g => {
+    if (g.a === PYSLUG) { if (PYME) h += mPyme(PYME, d); }
+    else if (g.a === "agenda") h += `<section class="m-card m-sec" data-m="agenda"><h2>Lo que viene</h2><div class="meta">Agenda</div><div class="m-ag">${(d.agenda || []).map(a =>
+      `<div class="r"><div class="w">${esc(a.cuando)}</div><div class="q">${fmt(a.que)}</div></div>`).join("")}</div></section>`;
+    else if (by[g.a]) h += mSec(by[g.a]);
+  });
+  h += `<section class="m-card"><h2>Informes completos</h2><div class="m-links">${Object.keys(FULL).map(k =>
+    `<a href="#completo-${k}" data-full="${k}"><span>${esc(secName(FULL[k].s))}</span><span>Leer →</span></a>`).join("")}</div></section>`;
+  const foot = d.footer || "", hasNoRec = /no constituye recomendaci[oó]n/i.test(foot);
+  const footRest = foot.replace(/(Material informativo,?\s*)?no constituye recomendaci[oó]n de inversi[oó]n\.?/i, "").trim();
+  h += `<div class="m-disc"><div class="ttl">Aviso legal</div><p>${hasNoRec ? "Este informe es material informativo y no constituye recomendación de inversión." : "Material informativo, no constituye recomendación de inversión."}</p>${footRest ? `<p>${esc(footRest)}</p>` : ""}</div>
+    <div class="m-foot">Sigma Capital · ${esc(d.titulo || "Resumen de mercados")} · ${esc(shortDate(d))}</div></main>`;
+  return h;
+}
+let mActive = null, mLock = null, mSaved = null;
+function renderModern() {
+  lastW = window.innerWidth;
+  $("modern").innerHTML = modernHTML(DATA);
+  paintFs(); paintFmt(); mFit(); mActive = null; mUpdate();
+}
+function mFit() {   // ningún número se corta: si no entra en su tarjeta se achica (hasta 70%)
+  document.querySelectorAll("#modern .m-kpi .v").forEach(v => {
+    v.style.fontSize = "";
+    const base = parseFloat(getComputedStyle(v).fontSize);
+    for (let f = 0.95; f >= 0.7 && v.scrollWidth > v.clientWidth + 0.5; f -= 0.05) v.style.fontSize = (base * f).toFixed(2) + "px";
+  });
+}
+const mHeadH = () => { const h = document.querySelector("#modern .m-head"); return h ? h.offsetHeight : 0; };
+const mEl = a => document.querySelector(`#modern [data-m="${a}"]`);
+function mTarget(a) { const el = mEl(a); return !el || a === "resumen" ? 0 : Math.max(0, el.offsetTop - mHeadH() - 10); }
+function mScrollTo(a, smooth, flash) {
+  const box = $("modern"), el = mEl(a); if (!el) return;
+  const top = Math.min(mTarget(a), box.scrollHeight - box.clientHeight);
+  const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  mLock = { a, top, until: Date.now() + 1200 };
+  if (smooth && !reduce && "scrollBehavior" in document.documentElement.style) box.scrollTo({ top, behavior: "smooth" }); else box.scrollTop = top;
+  mSetActive(a);
+  if (flash && a !== "resumen") { el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); }
+}
+function mSetActive(a) {
+  if (a === mActive) return;
+  mActive = a;
+  const nav = document.querySelector("#modern .m-chips"); if (!nav) return;
+  nav.querySelectorAll("a").forEach(c => { const on = c.dataset.mgo === a; c.classList.toggle("on", on); if (on) c.setAttribute("aria-current", "true"); else c.removeAttribute("aria-current"); });
+  const c = nav.querySelector("a.on");
+  if (c) { const l = c.offsetLeft - nav.offsetLeft, r = l + c.offsetWidth;   // el chip activo siempre a la vista (scroll horizontal sólo de la fila de chips)
+    if (l < nav.scrollLeft + 8 || r > nav.scrollLeft + nav.clientWidth - 8) nav.scrollLeft = Math.max(0, l - 12); }
+  if (!fullOpen && history.replaceState) history.replaceState(history.state && history.state.full ? null : history.state, "", "#" + a);
+}
+function mUpdate() {
+  const box = $("modern"); if (!MODERN || !box.firstChild) return;
+  if (mLock) { if (Date.now() < mLock.until && Math.abs(box.scrollTop - mLock.top) > 2) return; mLock = null; }
+  const secs = [...box.querySelectorAll("[data-m]")], lim = mHeadH() + 40;
+  let a = secs.length ? secs[0].dataset.m : null;
+  secs.forEach(s => { if (s.getBoundingClientRect().top <= lim) a = s.dataset.m; });
+  if (box.scrollTop + box.clientHeight >= box.scrollHeight - 4 && secs.length) a = secs[secs.length - 1].dataset.m;
+  if (a) mSetActive(a);
+}
+let mRaf = 0;
+function mOnScroll() { if (!mRaf) mRaf = requestAnimationFrame(() => { mRaf = 0; mUpdate(); }); }
+function mPos() {
+  const box = $("modern"), el = mEl(mActive || "resumen");
+  if (!el) return { a: "resumen", f: 0 };
+  return { a: mActive || "resumen", f: (box.scrollTop + mHeadH() + 10 - el.offsetTop) / Math.max(1, el.offsetHeight), top: box.scrollTop };
+}
+function mRestore(p) {
+  const box = $("modern"), el = mEl(p.a); if (!el) return;
+  box.scrollTop = p.top === 0 ? 0 : Math.max(0, el.offsetTop + p.f * el.offsetHeight - mHeadH() - 10);
+  mActive = null; mSetActive(p.a);
+}
+
 function start() {
   if (!DATA) return;
   document.documentElement.style.setProperty("--logo-ar", LOGO_AR);
   if (/[?&]og\b/.test(location.search)) { document.body.classList.add("og"); buildOG(DATA); document.body.dataset.ready = "1"; return; }
-  paintFs();
-  document.querySelectorAll("[data-fs]").forEach(b => b.addEventListener("click", e => { e.preventDefault(); toggleFs(); }));
+  paintFs(); paintFmt();
   PAGES_HTML = buildPages(DATA);
   const m = /^#p(\d+)$/.exec(location.hash); if (m) cur = Math.max(0, Math.min(PAGES_HTML.length - 1, +m[1] - 1));
   const fm = /^#completo-(.+)$/.exec(location.hash), deep = fm && FULL[fm[1]] ? fm[1] : null;
   if (deep) cur = FULL[deep].page;
-  build();
+  const sa = NAV.find(g => "#" + g.a === location.hash); if (sa) cur = sa.p;
+  $("modern").addEventListener("scroll", mOnScroll, { passive: true });
+  if (MODERN) { const h0 = location.hash; renderModern(); const a = anchorFromHash(h0); if (a && a !== "resumen") mScrollTo(a, false); }
+  else { build(); if (sa) jumpTo(sa.p, sa.a); }
   if (deep) openFull(deep);
   window.addEventListener("hashchange", route);
   window.addEventListener("popstate", route);
@@ -1014,20 +1319,26 @@ function start() {
     if (a) { e.preventDefault(); goFull(a.dataset.full, !!a.dataset.replace); return; }
     const g = e.target.closest && e.target.closest("a[data-go]");
     if (g) { e.preventDefault(); jumpTo(+g.dataset.go, g.dataset.anchor); return; }
-    if (e.target.closest && e.target.closest("[data-back]")) { e.preventDefault(); backToBook(); }
+    if (e.target.closest && e.target.closest("[data-back]")) { e.preventDefault(); backToBook(); return; }
+    if (e.target.closest && e.target.closest("[data-fs]")) { e.preventDefault(); toggleFs(); return; }
+    if (e.target.closest && e.target.closest("[data-fmt]")) { e.preventDefault(); setFormat(MODERN ? "diario" : "moderno"); return; }
+    const mg = e.target.closest && e.target.closest("a[data-mgo]");
+    if (mg) { e.preventDefault(); mScrollTo(mg.dataset.mgo, true, true); }
   });
   if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) { $("hintt").textContent = "tocá la hoja o usá las flechas ← →"; $("hint").querySelector(".hand").textContent = "👆"; }
-  if (cur > 0) hideHint(); else hintTimer = setTimeout(hideHint, 6000);
+  if (cur > 0 || MODERN) hideHint(); else hintTimer = setTimeout(hideHint, 6000);
   $("next").onclick = $("snext").onclick = next;
   $("idxbtn").onclick = () => jumpTo(0, null);
   $("prev").onclick = $("sprev").onclick = prev;
   document.addEventListener("keydown", e => {
     if (fullOpen) { if (e.key === "Escape") backToBook(); return; }
+    if (MODERN) return;   // en la versión moderna las teclas hacen scroll normal
     if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") { e.preventDefault(); next(); }
     if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); prev(); }
   });
   let rt; window.addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(() => {
     // en el celular la barra del navegador cambia el alto todo el tiempo: sólo se rearma si cambia el ancho (rotación)
+    if (MODERN) { if (Math.abs(window.innerWidth - lastW) > 2) { lastW = window.innerWidth; mFit(); if (fullOpen) fitTables($("fvbody")); } return; }
     if (Math.abs(window.innerWidth - lastW) > 2 || window.innerWidth >= 700) { build(); if (fullOpen) fitTables($("fvbody")); }
   }, 250); });
   document.body.dataset.ready = "1";
