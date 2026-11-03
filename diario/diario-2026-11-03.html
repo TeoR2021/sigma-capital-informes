@@ -1143,7 +1143,7 @@ function kgridList(kpis) {
 /* ---------- Formato: "diario" (hojas, por defecto) <-> "moderno" (scroll vertical). Se recuerda en este teléfono; ?formato=moderno|diario ---------- */
 const FMT_KEY = "sigma-diario-formato";
 let MODERN = false;
-try { MODERN = localStorage.getItem(FMT_KEY) === "moderno"; } catch (e) {}
+try { localStorage.removeItem(FMT_KEY); } catch (e) {} /* siempre abre en versión diario */
 { const q = /[?&]formato=(\w+)/.exec(location.search); if (q) MODERN = q[1] === "moderno"; }
 const IC_MOD = '<svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="2.5" width="14" height="6" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="11.5" width="14" height="6" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>';
 const IC_DIA = '<svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="3" width="15" height="14" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5.5 7h9M5.5 10h4M5.5 13h4M11.5 10h3M11.5 13h3" stroke="currentColor" stroke-width="1.6"/></svg>';
@@ -1166,7 +1166,7 @@ function setFormat(f) {
   const toModern = f === "moderno";
   if (toModern === MODERN) return;
   if (fullOpen) closeFull();
-  try { localStorage.setItem(FMT_KEY, toModern ? "moderno" : "diario"); } catch (e) {}
+  
   // si el link traía ?formato=..., se saca para que al recargar valga lo que eligió el lector
   if (/[?&]formato=/.test(location.search) && history.replaceState) {
     const q = location.search.replace(/([?&])formato=\w+&?/, "$1").replace(/[?&]$/, "");
